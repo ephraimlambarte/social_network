@@ -16,4 +16,8 @@ class FriendRequest extends Model
     public function sender() {
         return $this->belongsTo(User::class, 'user_sender_id');
     }
+
+    public function isActionable() {
+        return !$this->is_accepted && !$this->is_ignored;
+    }
 }

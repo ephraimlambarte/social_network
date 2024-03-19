@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Middleware\FriendRequestActionMiddleware;
 use App\Http\Controllers\FriendRequestController;
 
 Route::get('/', function () {
@@ -27,6 +28,11 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/add-friend/{user}', [FriendRequestController::class, 'addFriend']);
     Route::get('/my-friend-requests', [FriendRequestController::class, 'myFriendRequests']);
+    Route::middleware([FriendRequestActionMiddleware::class])->group(function () {
+        Route::post('/accept-friend-request/{friendRequest}', [FriendRequestController::class, 'acceptFriendRequest']);
+        Route::post('/ignore-friend-request/{friendRequest}', [FriendRequestController::class, 'ignoreFriendRequest']);
+    });
+ 
 });
 
 require __DIR__.'/auth.php';
