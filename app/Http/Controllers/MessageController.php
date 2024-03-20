@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\MessageService;
 use App\Services\UserService;
+use App\Events\MessageSentEvent;
 
 class MessageController extends Controller
 {
@@ -31,13 +32,15 @@ class MessageController extends Controller
                 422
             );
         }
+        $message = $this->service->store([
+            'message' => $request->message,
+            'user_receiver_id' => $user->id,
+            'user_sender_id' => auth()->user()->id,
+        ]);
+        MessageSentEvent::dispatch($message);
 
         return response()->json(
-            $this->service->store([
-                'message' => $request->message,
-                'user_receiver_id' => $user->id,
-                'user_sender_id' => auth()->user()->id,
-            ]),
+            $message,
             200
         );
     }

@@ -8,6 +8,8 @@ use App\Models\FriendRequest;
 use App\Services\FriendRequestService;
 use App\Services\UserService;
 use App\Http\Resources\FriendRequestResource;
+use App\Events\FriendRequestSentEvent;
+use App\Events\FriendRequestAcceptedEvent;
 
 class FriendRequestController extends Controller
 {
@@ -43,11 +45,15 @@ class FriendRequestController extends Controller
             ], 422);
         }
 
+        $fr = $this->service->store([
+            'user_sender_id' => auth()->user()->id,
+            'user_receiver_id' => $user->id,
+        ]);
+        
+        FriendRequestSentEvent::dispatch($fr);
+
         return response()->json(new FriendRequestResource(
-            $this->service->store([
-                'user_sender_id' => auth()->user()->id,
-                'user_receiver_id' => $user->id,
-            ])
+           $fr 
         ), 200);
     }
 
@@ -65,7 +71,7 @@ class FriendRequestController extends Controller
         $friendRequestResource = new FriendRequestResource(
             $this->service->acceptFriendRequest($friendRequest)
         );
-
+        FriendRequestAcceptedEvent::dispatch($friendRequestResource);
         $this->userService->addToFriends(auth()->user(), $friendRequest->receiver);
 
         return response()->json($friendRequestResource, 200);
