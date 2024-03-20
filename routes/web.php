@@ -7,6 +7,7 @@ use Inertia\Inertia;
 
 use App\Http\Middleware\FriendRequestActionMiddleware;
 use App\Http\Controllers\FriendRequestController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,7 +33,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/accept-friend-request/{friendRequest}', [FriendRequestController::class, 'acceptFriendRequest']);
         Route::post('/ignore-friend-request/{friendRequest}', [FriendRequestController::class, 'ignoreFriendRequest']);
     });
- 
+
+    Route::post('/send-message/{user}', [MessageController::class, 'sendMessage']);
+    Route::get('/messages/{user}', [MessageController::class, 'getMessages']);
+    Route::get('/my-inbox', [MessageController::class, 'getUserInbox']);
+    Route::post('/read-messages', [MessageController::class, 'readMessages']);
 });
 
 require __DIR__.'/auth.php';
