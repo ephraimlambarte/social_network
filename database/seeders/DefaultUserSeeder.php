@@ -16,8 +16,8 @@ class DefaultUserSeeder extends Seeder
     {
         User::factory()->create([
             'name' => 'Ephraim Lambarte',
-            'email' => 'lambarteephraim@gmail.com',
-            'password' => Hash::make('11587496'),
+            'email' => env('DEFAULT_USER_EMAIL'),
+            'password' => Hash::make(env('DEFAULT_USER_PASSWORD')),
         ]);
     }
 }
