@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\MessageService;
 use App\Services\UserService;
 use App\Events\MessageSentEvent;
+use Inertia\Inertia;
 
 class MessageController extends Controller
 {
@@ -42,6 +43,15 @@ class MessageController extends Controller
         return response()->json(
             $message,
             200
+        );
+    }
+
+    public function getFriendMessagesPage(User $user) {
+        return Inertia::render(
+            'Messages',
+            [
+                'user' => $user,
+            ]
         );
     }
 

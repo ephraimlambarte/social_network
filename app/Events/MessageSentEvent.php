@@ -7,10 +7,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageSentEvent implements ShouldBroadcast
+class MessageSentEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,6 +33,7 @@ class MessageSentEvent implements ShouldBroadcast
         return [
             new PrivateChannel("my-inbox.".$this->message->receiver->id),
             new PrivateChannel("messages.".$this->message->sender->id),
+            new PrivateChannel("messages.".$this->message->receiver->id),
         ];
     }
 }

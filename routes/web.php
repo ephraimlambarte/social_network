@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/friends', function () {
         return Inertia::render('Friends');
     })->name('friends');
+    Route::get('/message/{user}', [MessageController::class, 'getFriendMessagesPage'])->name('message.friend');
 });
 
 require __DIR__.'/auth.php';

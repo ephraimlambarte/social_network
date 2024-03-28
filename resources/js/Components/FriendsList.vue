@@ -3,6 +3,7 @@ import DeleteButton from '@/Components/DeleteButton.vue';
 import Button from '@/Components/Button.vue';
 import Icon from '@/Components/Icon.vue';
 import { snackbarStore } from '@/Stores/snackbars';
+import { router } from '@inertiajs/vue3'
 
 const sbStore = snackbarStore();
 const emit = defineEmits(['friend-removed']);
@@ -14,7 +15,6 @@ defineProps({
 });
 
 const removeFriend = (friend, index) => {
-    console.log(friend);
     window.axios.delete('/remove-friend/'+friend.id)
     .then(res => {
         emit('friend-removed', friend, index);
@@ -25,7 +25,7 @@ const removeFriend = (friend, index) => {
     });
 };
 const sendMessageToFriend = (friend) => {
-    console.log(friend);
+    router.visit('/message/'+friend.id);
 }
 </script>
 

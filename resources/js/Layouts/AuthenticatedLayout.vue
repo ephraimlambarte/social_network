@@ -14,11 +14,14 @@ import { Link } from '@inertiajs/vue3';
 const sbStore = snackbarStore();
 
 const showingNavigationDropdown = ref(false);
+const props = defineProps({
+    mainClass: String | Object,
+});
 </script>
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen max-h-screen bg-gray-100 flex flex-col">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -150,7 +153,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-1" :class="mainClass">
                 <slot />
             </main>
             <div class="snackbar-container">

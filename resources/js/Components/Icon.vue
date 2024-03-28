@@ -3,6 +3,14 @@
 import { computed } from 'vue';
 const props = defineProps({
     icon: String,
+    height: {
+        type: String,
+        default: '1rem',
+    },
+    width: {
+        type: String,
+        default: '1rem',
+    },
 });
 
 const path = computed(() => {
@@ -21,7 +29,10 @@ const path = computed(() => {
             return '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />';
         case 'success':
             return '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />'
-
+        case 'user' :
+            return '<path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />'
+        case 'send':
+            return '<path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />';
     }
     return '';
 });
@@ -34,6 +45,7 @@ const path = computed(() => {
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        class="w-4 h-4">
+        :height="height"
+        :width="width">
     </svg>
 </template>

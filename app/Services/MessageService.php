@@ -14,13 +14,25 @@ class MessageService extends BaseModelService
     }
 
     public function getMessagesOfTwoUser(User $user1, User $user2) {
+        return $this->messageOf2UserQuery($user1, $user2)
+        ->paginate(10);
+    }
+
+    public function messageOf2UserQuery(User $user1, User $user2) {
         return $this->model()
-        ->where('user_sender_id', $user1->id)
-        ->orWhere('user_receiver_id', $user1->id)
-        ->orWhere('user_sender_id', $user2->id)
-        ->orWhere('user_receiver_id', $user2->id)
-        ->orderBy('id', 'desc')
-        ->get();
+        ->where(function ($query) use ($user1, $user2) {
+            $query->where('user_sender_id', $user1->id)
+            ->where('user_receiver_id', $user2->id);
+        })
+        ->orWhere(function ($query) use ($user1, $user2) {
+            $query->where('user_sender_id', $user2->id)
+            ->where('user_receiver_id', $user1->id);
+        })
+        ->orderBy('id', 'desc');
+        // ->orWhere('user_receiver_id', $user1->id)
+        // ->orWhere('user_sender_id', $user2->id)
+        // ->orWhere('user_receiver_id', $user2->id)
+        
     }
 
     public function getUserInbox(User $user) {
