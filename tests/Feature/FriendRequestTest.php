@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\FriendRequest;
+use Arr;
 
 class FriendRequestTest extends TestCase
 {
@@ -156,5 +157,74 @@ class FriendRequestTest extends TestCase
             'id' => $fr->id,
             'is_ignored' => true, 
         ]);
+    }
+
+    public function test_search_people_to_add_success() {
+        $users = User::factory(5)->create();
+
+        FriendRequest::factory()->create([
+            'user_sender_id' => $users[0]->id,
+            'user_receiver_id' => $this->user->id,
+        ]);
+        FriendRequest::factory()->create([
+            'user_sender_id' => $this->user->id,
+            'user_receiver_id' => $users[1]->id,
+        ]);
+        
+        $this->user->friends()->attach($users[2]->id);
+        $users[3]->friends()->attach($this->user->id);
+
+        $response = $this->get("/search-people?".Arr::query([
+            'search_input' => ''
+        ]));
+        $data = $response->decodeResponseJson();
+        $data->assertFragment([
+            'id' => $users[0]->id,
+        ]);
+        $data->assertFragment([
+            'id' => $users[1]->id,
+        ]);
+        $data->assertFragment([
+            'id' => $users[4]->id,
+        ]);
+        $data->assertCount(3);
+
+        $data->assertMissing([
+            'id' => $users[2]->id,
+        ]);
+        $data->assertMissing([
+            'id' => $users[3]->id,
+        ]);
+        $this->assertTrue(!!$data[0]['sent_friend_request']);
+        $this->assertFalse(!!$data[0]['received_friend_request']);
+
+        $this->assertTrue(!!$data[1]['received_friend_request']);
+        $this->assertFalse(!!$data[1]['sent_friend_request']);
+    }
+
+    public function test_search_people_to_add_with_search_input_value_success() {
+        $users = User::factory(5)->create();
+
+        FriendRequest::factory()->create([
+            'user_sender_id' => $users[0]->id,
+            'user_receiver_id' => $this->user->id,
+        ]);
+        FriendRequest::factory()->create([
+            'user_sender_id' => $this->user->id,
+            'user_receiver_id' => $users[1]->id,
+        ]);
+        
+        $this->user->friends()->attach($users[2]->id);
+        $users[3]->friends()->attach($this->user->id);
+
+        $response = $this->get("/search-people?".Arr::query([
+            'search_input' => $users[0]->name,
+        ]));
+
+        $data = $response->decodeResponseJson();
+        $data->assertFragment([
+            'id' => $users[0]->id,
+        ]);
+        $data->assertCount(1);
     }
 }

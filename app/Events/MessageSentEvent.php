@@ -32,6 +32,7 @@ class MessageSentEvent implements ShouldBroadcastNow
     {
         return [
             new PrivateChannel("my-inbox.".$this->message->receiver->id),
+            new PrivateChannel("my-inbox.".$this->message->sender->id),
             new PrivateChannel("messages.".$this->message->sender->id),
             new PrivateChannel("messages.".$this->message->receiver->id),
         ];

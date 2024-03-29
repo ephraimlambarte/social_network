@@ -3,7 +3,9 @@
 namespace App\Services;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FriendRequest;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class FriendRequestService extends BaseModelService
 {
@@ -55,6 +57,41 @@ class FriendRequestService extends BaseModelService
         ->when($isIgnored !== null, function ($db) use ($isIgnored) {
             $db->where('is_ignored', $isIgnored);
         })
+        ->get();
+    }
+
+    public function getPeopleToAdd($query) {
+        $searchInput = $query['search_input'];
+
+        return User::leftJoin('friend_requests as sent_fr', function ($join) {
+            $join->on('users.id', '=', 'sent_fr.user_sender_id')
+            ->where('sent_fr.user_receiver_id', auth()->user()->id);
+        })
+        ->leftJoin('friend_requests as received_fr', function ($join) {
+            $join->on('users.id', '=', 'received_fr.user_receiver_id')
+            ->where('received_fr.user_sender_id', auth()->user()->id);
+        })
+        ->where(function ($query) {
+            $query->whereNotIn('users.id', function ($query){
+                $query
+                ->select('user_id as id')
+                ->from('friends')
+                ->where('user_friend_id', auth()->user()->id)
+                ->union(DB::table('friends')->select('user_friend_id as id')->where('user_id', auth()->user()->id));
+            })
+            ->where('users.id', '<>', auth()->user()->id);
+        })
+        ->where(function ($query) use ($searchInput) {
+            $query->where('users.name', 'LIKE', "%$searchInput%")
+            ->orWhere('users.email', 'LIKE', "%$searchInput%");
+        })
+        ->select(
+            'users.name',
+            'users.id',
+            'users.email',
+            'sent_fr.id as sent_friend_request',
+            'received_fr.id as received_friend_request',
+        )
         ->get();
     }
 

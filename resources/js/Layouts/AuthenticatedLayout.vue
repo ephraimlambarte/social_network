@@ -41,6 +41,9 @@ const props = defineProps({
                                 <NavLink :href="route('friends')" :active="route().current('friends')">
                                     Friends
                                 </NavLink>
+                                <NavLink :href="route('add.friend')" :active="route().current('add.friend')">
+                                    Add some friends
+                                </NavLink>
                             </div>
                         </div>
 

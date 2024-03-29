@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/accept-friend-request/{friendRequest}', [FriendRequestController::class, 'acceptFriendRequest']);
         Route::post('/ignore-friend-request/{friendRequest}', [FriendRequestController::class, 'ignoreFriendRequest']);
     });
+    Route::get('/search-people', [FriendRequestController::class, 'searchPeople']);
 
     Route::post('/send-message/{user}', [MessageController::class, 'sendMessage']);
     Route::get('/messages/{user}', [MessageController::class, 'getMessages']);
@@ -47,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/friends', function () {
         return Inertia::render('Friends');
     })->name('friends');
+    Route::get('/add-a-friend', function () {
+        return Inertia::render('AddFriend');
+    })->name('add.friend');
     Route::get('/message/{user}', [MessageController::class, 'getFriendMessagesPage'])->name('message.friend');
 });
 

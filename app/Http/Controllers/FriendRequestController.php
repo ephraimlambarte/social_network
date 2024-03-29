@@ -82,4 +82,15 @@ class FriendRequestController extends Controller
             $this->service->ignoreFriendRequest($friendRequest)
         ), 200);
     }
+
+    public function searchPeople(Request $request) {
+        $request->validate([
+            'search_input' => 'present|nullable',
+        ]);
+        return response()->json(
+            $this->service->getPeopleToAdd([
+                'search_input' => $request->search_input,
+            ])
+        , 200);
+    }
 }
