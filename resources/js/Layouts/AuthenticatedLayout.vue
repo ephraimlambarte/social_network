@@ -7,6 +7,8 @@ import NavLink from '@/Components/NavLink.vue';
 import SnackBar from '@/Components/SnackBar.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Inbox from '@/Components/Inbox/Inbox.vue';
+import MyFriendRequests from '@/Components/MyFriendRequests/MyFriendRequests.vue';
+
 import { snackbarStore } from '@/Stores/snackbars';
 
 import { Link } from '@inertiajs/vue3';
@@ -49,6 +51,9 @@ const props = defineProps({
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <!-- Settings Dropdown -->
+                            <div class="ms-3 relative">
+                                <MyFriendRequests/>
+                            </div>
                             <div class="ms-3 relative">
                                 <Inbox/>
                             </div>

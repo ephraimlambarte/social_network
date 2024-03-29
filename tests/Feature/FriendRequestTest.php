@@ -78,14 +78,14 @@ class FriendRequestTest extends TestCase
 
     public function test_get_my_friend_requests_success() {
         $fr = FriendRequest::factory(5)->create([
-            'user_sender_id' => $this->user->id,
+            'user_receiver_id' => $this->user->id,
         ]);
         $fr2 = FriendRequest::factory(2)->create([
-            'user_sender_id' => $this->user->id,
+            'user_receiver_id' => $this->user->id,
             'is_accepted' => true,
         ]);
         $fr3 = FriendRequest::factory(2)->create([
-            'user_sender_id' => $this->user->id,
+            'user_receiver_id' => $this->user->id,
             'is_ignored' => true,
         ]);
         $response = $this->get("/my-friend-requests");

@@ -33,9 +33,14 @@ class FriendRequestService extends BaseModelService
         $sender = null;
         $isAccepted = null;
         $isIgnored = null;
+        $receiver = null;
 
         if (isset($query['sender'])) {
             $sender = $query['sender'];
+        }
+
+        if (isset($query['receiver'])) {
+            $receiver = $query['receiver'];
         }
 
         if (isset($query['is_accepted'])) {
@@ -48,6 +53,9 @@ class FriendRequestService extends BaseModelService
 
         return $this->model()
         ->with('sender', 'receiver')
+        ->when($receiver, function ($db, $val) {
+            $db->where('user_receiver_id', $val);
+        })
         ->when($sender, function ($db, $val) {
             $db->where('user_sender_id', $val);
         })

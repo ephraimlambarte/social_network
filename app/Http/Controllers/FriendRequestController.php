@@ -60,7 +60,7 @@ class FriendRequestController extends Controller
     public function myFriendRequests() {
         return response()->json(FriendRequestResource::collection(
             $this->service->list([
-                'sender' => auth()->user()->id,
+                'receiver' => auth()->user()->id,
                 'is_accepted' => false,
                 'is_ignored' => false,
             ])
@@ -72,7 +72,7 @@ class FriendRequestController extends Controller
             $this->service->acceptFriendRequest($friendRequest)
         );
         FriendRequestAcceptedEvent::dispatch($friendRequestResource);
-        $this->userService->addToFriends(auth()->user(), $friendRequest->receiver);
+        $this->userService->addToFriends(auth()->user(), $friendRequest->sender);
 
         return response()->json($friendRequestResource, 200);
     }
