@@ -6,7 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import SnackBar from '@/Components/SnackBar.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-
+import Inbox from '@/Components/Inbox/Inbox.vue';
 import { snackbarStore } from '@/Stores/snackbars';
 
 import { Link } from '@inertiajs/vue3';
@@ -47,13 +47,16 @@ const props = defineProps({
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <!-- Settings Dropdown -->
                             <div class="ms-3 relative">
-                                <Dropdown align="right" width="48">
+                                <Inbox/>
+                            </div>
+                            <div class="ms-3 relative">
+                                <Dropdown
+                                    align="right"
+                                    width="48"
+                                    btnClass="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                            >
+
                                                 {{ $page.props.auth.user.name }}
 
                                                 <svg
@@ -68,7 +71,6 @@ const props = defineProps({
                                                         clip-rule="evenodd"
                                                     />
                                                 </svg>
-                                            </button>
                                         </span>
                                     </template>
 
@@ -80,6 +82,7 @@ const props = defineProps({
                                     </template>
                                 </Dropdown>
                             </div>
+                            
                         </div>
 
                         <!-- Hamburger -->

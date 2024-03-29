@@ -16,7 +16,7 @@ class FriendRequestActionMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $fr = FriendRequest::find($request->friendRequest)->first();
+        $fr = $request->friendRequest;
 
         if ($fr && $fr->isActionable()) {
             return $next($request);

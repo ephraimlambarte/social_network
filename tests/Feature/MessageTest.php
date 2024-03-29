@@ -76,7 +76,7 @@ class MessageTest extends TestCase
         $response = $this->get("/messages/$user->id");
         $response->assertStatus(200);
         $data = $response->decodeResponseJson();
-        $this->assertEquals(2, count($data));
+        $this->assertEquals(2, count($data['data']));
     }
 
     public function test_send_message_to_a_non_friend_fail() : void {

@@ -20,6 +20,7 @@ class MessageService extends BaseModelService
 
     public function messageOf2UserQuery(User $user1, User $user2) {
         return $this->model()
+        ->with('sender', 'receiver')
         ->where(function ($query) use ($user1, $user2) {
             $query->where('user_sender_id', $user1->id)
             ->where('user_receiver_id', $user2->id);
@@ -29,10 +30,6 @@ class MessageService extends BaseModelService
             ->where('user_receiver_id', $user1->id);
         })
         ->orderBy('id', 'desc');
-        // ->orWhere('user_receiver_id', $user1->id)
-        // ->orWhere('user_sender_id', $user2->id)
-        // ->orWhere('user_receiver_id', $user2->id)
-        
     }
 
     public function getUserInbox(User $user) {
@@ -60,13 +57,15 @@ class MessageService extends BaseModelService
         ->groupBy('other_user_id');
         
         return $this->model()
+        ->with('sender', 'receiver')
         ->select(
             'm.user_sender_id',
             'm.user_receiver_id',
             'm.message',
             'm.created_at',
             'm.updated_at',
-            'm.id'
+            'm.id',
+            'm.read',
         )
         ->from('messages as m')
         ->orderBy('m.id', 'desc')
@@ -82,10 +81,11 @@ class MessageService extends BaseModelService
 
     public function readMessages(array $messages) {
         foreach ($messages as $key => $message) {
-            $message = Message::find($message)->first();
+            $message = Message::find($message);
             $message->read = true;
             $message->save();
         }
-        return Message::whereIn('id', $messages)->get();
+
+        return Message::with('sender', 'receiver')->whereIn('id', $messages)->get();
     }
 }

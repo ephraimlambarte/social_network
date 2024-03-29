@@ -14,6 +14,10 @@ const props = defineProps({
         type: String,
         default: 'py-1 bg-white',
     },
+    btnClass: {
+        type: String,
+        default: '',
+    },
 });
 
 const closeOnEscape = (e) => {
@@ -46,9 +50,9 @@ const open = ref(false);
 
 <template>
     <div class="relative">
-        <div @click="open = !open">
+        <button @click="open = !open" :class="btnClass">
             <slot name="trigger" />
-        </div>
+        </button>
 
         <!-- Full Screen Dropdown Overlay -->
         <div v-show="open" class="fixed inset-0 z-40" @click="open = false"></div>

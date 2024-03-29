@@ -14,6 +14,9 @@ Broadcast::channel('my-inbox.{userId}', function (User $user, int $userId) {
 Broadcast::channel('messages.{userId}', function (User $user, int $userId) {
     return $user->id !== $userId;
 });
+Broadcast::channel('read-messages.{userId}', function (User $user, int $userId) {
+    return $user->id === $userId;
+});
 Broadcast::channel('friend-request-received.{userId}', function (User $user, int $userId) {
     return $user->id === $userId;
 });

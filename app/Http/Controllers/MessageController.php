@@ -9,6 +9,8 @@ use App\Services\MessageService;
 use App\Services\UserService;
 use App\Events\MessageSentEvent;
 use Inertia\Inertia;
+use App\Http\Resources\MessageResource;
+use App\Events\ReadMessageEvent;
 
 class MessageController extends Controller
 {
@@ -41,7 +43,7 @@ class MessageController extends Controller
         MessageSentEvent::dispatch($message);
 
         return response()->json(
-            $message,
+            new MessageResource($message),
             200
         );
     }
@@ -56,11 +58,14 @@ class MessageController extends Controller
     }
 
     public function getMessages(Request $request, User $user) {
-        return $this->service->getMessagesOfTwoUser(auth()->user(), $user);
+        return MessageResource::collection($this->service->getMessagesOfTwoUser(auth()->user(), $user));
     }
 
     public function getUserInbox(Request $request) {
-        return $this->service->getUserInbox(auth()->user());
+        return response()->json(
+            MessageResource::collection($this->service->getUserInbox(auth()->user())),
+            200
+        );
     }
 
     public function readMessages(Request $request) {
@@ -68,7 +73,13 @@ class MessageController extends Controller
             'messages' => 'array|required',
             'messages.*' => 'exists:messages,id'
         ]);
-
-        return $this->service->readMessages($request->messages);
+        $messages = $this->service->readMessages($request->messages);
+        
+        ReadMessageEvent::dispatch($messages);
+        
+        return response()->json(
+            MessageResource::collection($messages),
+            200
+        );
     }
 }

@@ -7,7 +7,6 @@ const messages = ref([]);
 const page = ref(1);
 
 let pagePrevValue = 0;
-let prevScrollHeight = 0;
 let lastPage = 0;
 
 const message_container = ref(null);
@@ -29,7 +28,7 @@ const getMessages = () => {
         })
         .then((res) => {
             const newMessages = res.data.data;
-            lastPage = res.data.last_page;
+            lastPage = res.data.meta.last_page;
             messages.value = messages.value.concat(newMessages);
         });
     }
@@ -57,12 +56,22 @@ onMounted(() => {
         setTimeout(() => {
             message_container.value.scrollTop = message_container.value.scrollHeight
         }, 100);
+
+        let unreadMessages = messages.value.filter(m => !m.read && m.user_sender_id !== authenticatedUser.id);
+        if (unreadMessages.length > 0) {
+            window.axios.post('/read-messages', {
+                messages: unreadMessages.map(m => m.id),
+            });
+        }
     });
 });
 
 window.Echo.private(`messages.${props.user.id}`)
     .listen('MessageSentEvent', (e) => {
         messages.value.unshift(e.message);
+        window.axios.post('/read-messages', {
+            messages: [e.message.id],
+        });
         setTimeout(() => {
             message_container.value.scrollTop = message_container.value.scrollHeight
         }, 100);
