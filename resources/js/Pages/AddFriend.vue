@@ -33,10 +33,10 @@ const submitSearch = (e) => {
 
 const getButtonDisplay = (person) => {
     if (person.sent_friend_request) {
-        return "Friend Request Sent";
+        return "Friend Request Received";
     }
     if (person.received_friend_request) {
-        return "Friend Request Received";
+        return "Friend Request Sent";
     }
     return 'Add Friend';
 };
