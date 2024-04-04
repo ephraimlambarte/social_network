@@ -121,7 +121,7 @@ class FriendRequestTest extends TestCase
 
     public function test_accept_friend_request_success() {
         $fr = FriendRequest::factory()->create();
-        $response = $this->post("/accept-friend-request/{$fr->id}");
+        $response = $this->post("/accept-friend-request/$fr->id");
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('friend_requests', [
@@ -130,7 +130,7 @@ class FriendRequestTest extends TestCase
         ]);
         $this->assertDatabaseHas('friends', [
             'user_id' => $this->user->id,
-            'user_friend_id' => $fr->receiver->id, 
+            'user_friend_id' => $fr->sender->id, 
         ]);
     }
 
