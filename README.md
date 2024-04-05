@@ -1,6 +1,17 @@
-## BASIC SOCIAL NETWORK SITE USING LARAVEL
+# BASIC SOCIAL NETWORK SITE USING LARAVEL
 
-# setup project
+## Machine requirements
+### Windows Machine
+1. windows 10 or later
+2. docker desktop for windows
+3. WSL with Ubuntu 22.04 subsystem
+
+### Linux Machine
+1. Ubuntu 20 or later
+2. docker dekstop for ubuntu  
+
+
+## setup project
 1. After cloning, Pull all project dependencies. 
 ``` 
     docker run --rm \
