@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
         $this->setUser();
     }
     protected function setUser() {
-        $user = User::where('email', 'lambarteephraim@gmail.com')->first();
+        $user = User::where('email', env('DEFAULT_USER_EMAIL'))->first();
         $this->user = $user;
     }
 }
