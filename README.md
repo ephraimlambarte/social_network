@@ -31,9 +31,13 @@ cp .env.example .env
 ```
 ./vendor/bin/sail artisan db:seed --class=DefaultUserSeeder
 ```
-8. Open another terminal to run a watch on resources
+8. Install node modules
+```
+./vendor/bin/sail npm install
+```
+9. Open another terminal to run a watch on resources
 ```
 ./vendor/bin/sail run dev
 ```
-9. visit http://localhost on browser
+10. visit http://localhost on browser
 
